@@ -1,0 +1,10 @@
+1) ln - Create symbolic links (shortcuts) to other files
+2) ps - Display active processes
+3) cal - Command line calendar
+4) useradd/usermod - Add new user or change existing user data
+5) whatis - Find what command is used for
+6) chown - Grant ownership of files and folders
+7) head - Show 10 first lines of the file
+8) tail - Show 10 last lines of the files
+9) sort - Shows sorted contents of the file
+10) df - Display disk filesystem info
