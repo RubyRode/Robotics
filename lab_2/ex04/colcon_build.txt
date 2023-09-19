@@ -1,0 +1,4 @@
+Starting >>> mytopic
+Finished <<< mytopic [0.12s]
+
+Summary: 1 package finished [0.25s]
