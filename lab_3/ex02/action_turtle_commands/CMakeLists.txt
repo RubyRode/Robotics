@@ -11,6 +11,9 @@ find_package(action_messages REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(rclcpp_action REQUIRED)
 find_package(rclcpp_components REQUIRED)
+find_package(geometry_msgs REQUIRED)
+find_package(std_msgs REQUIRED)
+find_package(turtlesim REQUIRED)
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
@@ -23,36 +26,64 @@ if(BUILD_TESTING)
   set(ament_cmake_cpplint_FOUND TRUE)
   ament_lint_auto_find_test_dependencies()
 endif()
-
+# server build
 add_library(action_server SHARED
-  src/server.cpp)
-  
+  src/action_turtle_server.cpp)
 target_include_directories(action_server PRIVATE
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>)
-  
 target_compile_definitions(action_server
   PRIVATE "MESSAGE_TURTLE_CPP_BUILDING_DLL")
-  
-
-add_executable(action_turtle_client src/client.cpp)
-ament_target_dependencies(action_turtle_client rclcpp action_messages)
-
-add_executable(action_turtle_server src/server.cpp)
-ament_target_dependencies(action_turtle_server
+ament_target_dependencies(action_server
   rclcpp
   action_messages
   rclcpp_action
-  rclcpp_components)
+  rclcpp_components
+  geometry_msgs
+  std_msgs
+  turtlesim)
 
-rclcpp_components_register_node(action_turtle_server PLUGIN "action_turtle_commands::TurtleCmdActionServer" EXECUTABLE server)
-
-
-
+rclcpp_components_register_node(action_server PLUGIN "action_turtle_commands::TurtleCmdActionServer" EXECUTABLE action_turtle_server)
 install(TARGETS
-  action_turtle_server
+  action_server
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
   RUNTIME DESTINATION bin)
+  
+  
+  
+# client build
+
+add_executable(action_turtle_client
+  src/action_turtle_client.cpp
+  )
+  
+  
+
+#add_library(action_client SHARED
+#  src/action_turtle_client.cpp)
+#target_include_directories(action_client PRIVATE
+#  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+#  $<INSTALL_INTERFACE:include>)
+#target_compile_definitions(action_client
+#  PRIVATE "ACTION_TUTORIALS_CPP_BUILDING_DLL")
+ament_target_dependencies(action_turtle_client
+  action_messages
+  rclcpp
+  rclcpp_action
+  rclcpp_components
+  geometry_msgs
+  std_msgs
+  turtlesim)
+  
+install(TARGETS
+  action_turtle_client
+  DESTINATION lib/${PROJECT_NAME})
+#rclcpp_components_register_node(action_client PLUGIN "action_tutorials_cpp::FibonacciActionClient" EXECUTABLE action_turtle_client)
+#install(TARGETS
+#  action_client
+#  ARCHIVE DESTINATION lib
+#  LIBRARY DESTINATION lib
+#  RUNTIME DESTINATION bin)
 
 ament_package()
